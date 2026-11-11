@@ -182,7 +182,3 @@ git branch -M main
 git remote add origin <your-github-repo-url>
 git push -u origin main
 ```
-
-## License
-
-This project is intended for educational and project-development use. Add a license file if you plan to publish it publicly.
