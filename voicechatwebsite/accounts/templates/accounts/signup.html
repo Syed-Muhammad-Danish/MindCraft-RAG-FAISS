@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content1 %}
+<div class="form-container">
+    <div class="form-inner">
+        <h2 class="form-title">Signup</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="form-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="{{ form.username.id_for_label }}">Email</label>
+                <input type="email" name="username" class="form-input" required placeholder="e.g., testuser@example.com" value="{{ form.username.value|default:'' }}">
+                {% if form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                <input type="text" name="first_name" class="form-input" required placeholder="e.g., John" value="{{ form.first_name.value|default:'' }}">
+                {% if form.first_name.errors %}
+                    {% for error in form.first_name.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                <input type="text" name="last_name" class="form-input" required placeholder="e.g., Doe" value="{{ form.last_name.value|default:'' }}">
+                {% if form.last_name.errors %}
+                    {% for error in form.last_name.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.unique_11_digit_number.id_for_label }}">Unique 11-Digit Number</label>
+                <input type="text" name="unique_11_digit_number" class="form-input" required placeholder="e.g., 12345678901" value="{{ form.unique_11_digit_number.value|default:'' }}">
+                {% if form.unique_11_digit_number.errors %}
+                    {% for error in form.unique_11_digit_number.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.cnic.id_for_label }}">CNIC (13 digits)</label>
+                <input type="text" name="cnic" class="form-input" required placeholder="e.g., 1234567890123" value="{{ form.cnic.value|default:'' }}">
+                {% if form.cnic.errors %}
+                    {% for error in form.cnic.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                <input type="password" name="password1" class="form-input" required placeholder="Enter password">
+                {% if form.password1.errors %}
+                    {% for error in form.password1.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                <input type="password" name="password2" class="form-input" required placeholder="Confirm password">
+                {% if form.password2.errors %}
+                    {% for error in form.password2.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="submit" class="form-button">Sign Up</button>
+        </form>
+        <p class="mt-4">
+            Already have an account? <a href="{% url 'login' %}" class="text-blue-500 hover:text-pink-500">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

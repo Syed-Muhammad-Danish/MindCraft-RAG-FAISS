@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Select User{% endblock %}
+
+{% block sidebar %}
+<div class="grid grid-cols-1 gap-4">
+    <a href="{% url 'chat_room' 'ai' %}" class="block p-4 bg-blue-100 rounded-lg hover:bg-blue-200">
+        <div class="font-bold">Chat with AI</div>
+    </a>
+    {% for user in users %}
+        <a href="{% url 'chat_room' user.username %}" class="block p-4 bg-gray-100 rounded-lg hover:bg-gray-200">
+            <div class="font-bold">{{ user.username }}</div>
+        </a>
+    {% empty %}
+        <p class="text-gray-500">No other users available.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-4">Select a User to Chat</h2>
+    <p class="text-gray-600">Click a user or the AI chatbot from the sidebar to start chatting.</p>
+</div>
+{% endblock %}

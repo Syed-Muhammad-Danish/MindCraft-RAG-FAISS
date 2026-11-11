@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content1 %}
+<div class="form-container">
+    <div class="form-inner">
+        <h2 class="form-title">Enter OTP</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="form-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="{{ form.otp.id_for_label }}">OTP</label>
+                {{ form.otp }}
+                {% if form.otp.errors %}
+                    {% for error in form.otp.errors %}
+                        <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="submit" class="form-button">Verify OTP</button>
+        </form>
+        <p class="mt-4">
+            Back to <a href="{% url action %}" class="text-blue-500 hover:text-pink-500">{% if action == 'signup' %}Signup{% else %}Login{% endif %}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

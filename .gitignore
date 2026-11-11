@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3*
+media/
+staticfiles/
+
+# Environment variables
+.env
+.env.*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Uploads and generated files
+uploads/
+study_documents/
+
+# Local test artifacts
+.coverage
+.pytest_cache/
+htmlcov/

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat with {{ receiver.username|capfirst }}{% endblock %}
+
+{% load static %}
+{% block exHead %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block sidebar %}
+<div class="grid grid-cols-1 gap-4">
+    <a href="{% url 'chat_room' 'ai' %}" class="block p-4 rounded-lg {% if receiver.username == 'ai' %}bg-blue-300{% endif %}">
+        <div class="font-bold">Chat with AI</div>
+    </a>
+    {% for user in users %}
+        <a href="{% url 'chat_room' user.username %}" class="block p-4 rounded-lg {% if user.username == receiver.username %}bg-blue-300{% endif %}">
+            <div class="font-bold">{{ user.username }}</div>
+        </a>
+    {% empty %}
+        <p class="text-gray-500">No connected users.</p>
+    {% endfor %}
+</div>
+<div class="mt-4">
+    <form method="GET" action="{% url 'search_users' %}">
+        <input type="hidden" name="current_user" value="{{ receiver.username }}">
+        <input type="text" name="q" placeholder="Search users..." class="w-full p-2 border rounded" value="{{ query }}">
+        <button type="submit" class="p-2 rounded bg-blue-500 text-white">Search</button>
+    </form>
+    {% if search_results %}
+        <div class="mt-2">
+            {% for user in search_results %}
+                <div class="p-2 border-b">
+                    <span class="font-bold">{{ user.username }}</span>
+                    <form method="POST" action="{% url 'send_connection_request' user.username %}">
+                        {% csrf_token %}
+                        <button type="submit" class="p-1 bg-green-500 text-white rounded">Send Request</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="text-gray-500">No users found.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="mt-4">
+        <h3 class="font-bold">Pending Requests</h3>
+        {% for request in pending_requests %}
+            <div class="p-2 border-b">
+                <span class="font-bold">{{ request.from_user.username }}</span>
+                <form method="POST" action="{% url 'handle_connection_request' request.id %}">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="accept" class="p-1 bg-green-500 text-white rounded">Accept</button>
+                    <button type="submit" name="action" value="reject" class="p-1 bg-red-500 text-white rounded">Reject</button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="text-gray-500">No pending requests.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-transparent p-6 rounded-lg">
+    <h2 class="text-2xl font-bold mb-4">Chat with {{ receiver.username|capfirst }}</h2>
+    {% if error %}
+        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">{{ error }}</div>
+    {% endif %}
+    <div id="chat-messages" class="h-96 overflow-y-auto border p-4 mb-4">
+        {% for message in messages %}
+            <div class="{% if message.sender == user %}text-right{% else %}text-left{% endif %} mb-2">
+                <span class="font-bold">{{ message.sender.username|capfirst }}:</span>
+                <span>{{ message.content }}</span>
+                <span class="text-gray-500 text-sm">{{ message.timestamp|date:"H:i" }}</span>
+            </div>
+        {% empty %}
+            <p class="text-gray-500">No messages yet.</p>
+        {% endfor %}
+    </div>
+    <form method="POST" action="{% url 'chat_room' receiver.username %}">
+        {% csrf_token %}
+        <div class="flex">
+            <input type="text" name="content" class="w-full p-2 border rounded" placeholder="Type a message..." required>
+            <button type="submit" class="p-2 rounded ml-2">Send</button>
+        </div>
+    </form>
+    <div class="mt-4">
+        <button onclick="document.getElementById('encryptForm').style.display='block'" class="p-2 bg-blue-500 text-white rounded">Encrypt File</button>
+        <button onclick="document.getElementById('decryptForm').style.display='block'" class="p-2 bg-green-500 text-white rounded">Decrypt File</button>
+    </div>
+    <form id="encryptForm" method="POST" action="{% url 'encrypt_file' %}" enctype="multipart/form-data" style="display:none; margin-top: 10px;">
+        {% csrf_token %}
+        <input type="file" name="file" required>
+        <input type="password" name="password" placeholder="Enter password" required>
+        <select name="allowed_user">
+            <option value="">Select user (or none)</option>
+            {% for user in allowed_users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="p-2 bg-blue-500 text-white rounded">Encrypt</button>
+    </form>
+    <form id="decryptForm" method="POST" action="{% url 'decrypt_file' %}" enctype="multipart/form-data" style="display:none; margin-top: 10px;">
+        {% csrf_token %}
+        <input type="file" name="file" required>
+        <input type="password" name="password" placeholder="Enter password" required>
+        <button type="submit" class="p-2 bg-green-500 text-white rounded">Decrypt</button>
+    </form>
+    {% if error %}
+        <div class="bg-red-100 text-red-700 p-2 rounded mt-2">{{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}
