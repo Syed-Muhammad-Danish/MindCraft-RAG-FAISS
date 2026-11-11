@@ -10,7 +10,7 @@ The app is built with Django and keeps document access scoped to the authenticat
 - PDF upload and indexing for personal study materials
 - Retrieval-augmented generation (RAG) over the user’s documents only
 - Grounded answers with document-based context
-- Side feature: chat/real-time messaging remains available but is not the main product flow
+- Side feature: chat/real-time messaging remains available
 - Local development support with console-based OTP output
 
 ## Core idea
